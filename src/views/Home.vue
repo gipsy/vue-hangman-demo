@@ -8,7 +8,7 @@
           <line x1="100" y1="40" x2="230" y2="40" style="stroke:black;" />
           <line x1="100" y1="80" x2="130" y2="40" style="stroke:black;" />
           <line x1="230" y1="40" x2="230" y2="80" style="stroke:black;" />
-          <circle cx="230" cy="90" style="fill:red; stroke:black;" r="20" />
+          <circle cx="230" cy="90" style="fill: #9561e2; stroke:black;" r="20" />
           <line x1="230" y1="110" x2="230" y2="170" style="stroke:black;" />
           <line x1="230" y1="140" x2="250" y2="120" style="stroke:black;" />
           <line x1="230" y1="140" x2="210" y2="120" style="stroke:black;" />
@@ -22,17 +22,11 @@
         >Start Hangman Game</router-link>
       </div>
     </div>
-    <!-- <AppHangman msg="Welcome to Hangman Game"/> -->
   </div>
 </template>
 
 <script>
-// import Hangman from '@/components/Hangman.vue'
-
 export default {
-  name: 'home',
-  // components: {
-  //   AppHangman: Hangman
-  // }
+  name: 'home-view'
 }
 </script>

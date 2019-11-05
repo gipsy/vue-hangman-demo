@@ -1,18 +1,17 @@
 <template>
-  <div class="hangman">
-    <h1>This is an hangman page</h1>
+  <div class="flex flex-col justify-center h-screen">
+    <HangmanDiagram />
     <div
       v-for="(row, key) in letters"
       :key="key"
-      class="row"
+      class="inline-flex justify-center"
     >
       <KeyboardLetter
         v-for="letter in row"
         :letter="letter"
         :game-over="gameOver"
-        :two-players="twoPlayers"
         :key="letter"
-        @check="check(letter)"
+        @letter-selected="selectLetter(letter)"
         v-cloak
       />
     </div>
@@ -20,12 +19,29 @@
 </template>
 
 <script>
-import KeyboardLetter from '@/components/KeyboardLetter';
+import HangmanDiagram from '@/components/HangmanDiagram'
+import KeyboardLetter from '@/components/KeyboardLetter'
 
 export default {
-  name: 'hangman',
+  name: 'hangman-view',
+  data () {
+    return {
+      letters: [
+        ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
+        ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
+        ['Z', 'X', 'C', 'V', 'B', 'N', 'M']
+      ],
+      gameOver: false
+    }
+  },
   components: {
+    HangmanDiagram,
     KeyboardLetter
+  },
+  methods: {
+    selectLetter (letter) {
+      console.log(letter);
+    }
   }
 }
 </script>

@@ -1,30 +1,31 @@
 <template>
   <button
-    class='keyboard-row-letter'
-    :id='letter'
-    :disabled='disabled'
-    @click='clicked()'
+    class="text-xs font-normal rounded-full m-1 px-4 py-1 leading-normal bg-white border border-purple text-purple hover:bg-purple hover:text-white"
+    :id="letter"
+    :disabled="disabled"
+    @click="clicked()"
   >{{ letter }}</button>
 </template>
 
 <script>
 export default {
-  props: ["letter", "gameOver", "twoPlayers"],
-  data: function() {
+  props: [
+    'letter', 
+    'gameOver'
+  ],
+  data () {
     return {
       disabled: false
     }
   },
-  // disable button on click, and send 'check' event to run check() in main vue instance
   methods: {
-    clicked: function() {
+    clicked () {
       this.disabled = true
-      this.$emit("check")
-    }
+      this.$emit('letter-selected')
+    },
   },
   watch: {
-    // disable all buttons on game over; re-enable all buttons on restart
-    gameOver: function (newValue) {
+    gameOver (newValue) {
       this.disabled = newValue
     }
   }
@@ -32,14 +33,6 @@ export default {
 </script>
 
 <style scoped>
-button {
-  background-color: white;
-  border: none;
-  color: #333;
-  box-shadow: 0 2px 5px #D0D0D0;
-  font-family: 'Roboto', sans-serif;
-  margin: 2px;
-}
 button:disabled {
   color: #CCC;
 }
