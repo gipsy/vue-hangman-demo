@@ -951,5 +951,4 @@ module.exports = {
     important: false,
     separator: ':',
   },
-
 }

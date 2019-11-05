@@ -1,24 +1,20 @@
-# Vue 3 + Tailwind.css Starter
-
-https://medium.com/@marienfeldtom/using-vue-3-with-tailwind-css-f5294ffa6285
-
 ## Project setup
 ```
-npm install
+yarn install
 ```
 
 ### Compiles and hot-reloads for development
 ```
-npm run serve
+yarn run serve
 ```
 
 ### Compiles and minifies for production
 ```
-npm run build
+yarn run build
 ```
 
 ### Lints and fixes files
 ```
-npm run lint
+yarn run lint
 ```
-"# vue3-tailwind-starter"
+"# hangman demo"
