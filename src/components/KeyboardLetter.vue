@@ -1,6 +1,6 @@
 <template>
   <button
-    class="text-xs font-normal rounded-full m-1 px-4 py-1 leading-normal bg-white border border-purple text-purple hover:bg-purple hover:text-white"
+    class="text-xs font-normal rounded-full m-1 px-3 sm:px-4 sm:py-1 leading-normal bg-white border border-purple text-purple hover:bg-purple hover:text-white"
     :id="letter"
     :disabled="disabled"
     @click="clicked()"
@@ -34,6 +34,8 @@ export default {
 
 <style scoped>
 button:disabled {
-  color: #CCC;
+  color: white;
+  background-color: #ccc;
+  border-color: #ccc;
 }
 </style>
