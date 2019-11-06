@@ -6,13 +6,13 @@
       class="flex flex-col sm:flex-row justify-center"
     >
       <div 
-        class="m-2 max-w-sm mx-auto border-solid border-1 border-purple rounded-full shadow"
+        class="relative m-2 max-w-sm mx-auto border-solid border-1 border-purple rounded-full shadow"
         :class="currentPlayer == 1 ? 'is-active' : ''"
       >
         <h3 class="text-center pt-5 player-title">Player 1</h3>
         <p 
           v-if="currentPlayer == 1"
-          class="player-turn text-center"
+          class="absolute w-full text-center text-white"
         >guess the letter</p>
         <HangmanDiagram 
           :livesLeft="playerOneLives"
@@ -21,13 +21,13 @@
       </div>
 
       <div 
-        class="m-2 max-w-sm mx-auto border-solid border-1 border-purple rounded-full shadow"
+        class="relative m-2 max-w-sm mx-auto border-solid border-1 border-purple rounded-full shadow"
         :class="currentPlayer == 2 ? 'is-active' : ''"
       >
         <h3 class="text-center pt-5 player-title">Player 2</h3>
         <p 
           v-if="currentPlayer == 2"
-          class="player-turn text-center"
+          class="absolute w-full text-center text-white"
         >guess the letter</p>
         <HangmanDiagram
           :livesLeft="playerTwoLives"
@@ -37,6 +37,12 @@
     </div>
 
     <div class="mt-5 flex flex-col">
+      <h4 class="text-center pb-5">Hint</h4>
+      <p class="text-center m-auto w-2/5">{{ wordDefinition }}</p>
+      <GuessWord
+        :displayed-letters-arr="displayWordArr"
+        :letters-arr="guessWordArr"
+      />
       <div
         v-for="(row, key) in letters"
         :key="key"
@@ -58,6 +64,7 @@
 <script>
 import HangmanDiagram from '@/components/HangmanDiagram'
 import KeyboardLetter from '@/components/KeyboardLetter'
+import GuessWord from '@/components/GuessWord'
 
 import axios from 'axios'
 // import { mapActions, mapGetters } from 'vuex'
@@ -71,55 +78,78 @@ export default {
         ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
         ['Z', 'X', 'C', 'V', 'B', 'N', 'M']
       ],
-      currentWord: '',
+      guessWordStr: '',
+      guessWordArr: [],
+      displayWordArr: [],
       listOfWords: [],
+      wordDefinition: '',
       usedLetters: [],
-      playerOneLives: 1,
-      playerTwoLives: 1,
+      playerOneLives: 11,
+      playerTwoLives: 11,
       currentPlayer: 1,
       gameOver: false,
-      // entryWordDefinitionUrl: 'https://od-api.oxforddictionaries.com/api/v2/entries/en-gb',
       entryWordDefUrl: 'https://owlbot.info/api/v3/dictionary',
-      listOfWordsUrl: 'https://private-09961c-listofwords.apiary-mock.com/words'
+      listOfWordsUrl: 'https://private-09961c-listofwords.apiary-mock.com/words',
+      errors: [],
+      hintIndex: 0
     }
   },
   created() {
 
     fetch(this.listOfWordsUrl, {
       'method': 'GET',
-      'headers': {
-      }
     })
     .then((res) => res.json())
     .then(data => {
       this.listOfWords = Object.keys(data.results).filter(word => word.match(/^[^_]+$/))
-      console.log(this.listOfWords)
-      this.currentWord = this.listOfWords[Math.floor(Math.random() * this.listOfWords.length)]
+      this.guessWordStr = this.listOfWords[Math.floor(Math.random() * this.listOfWords.length)]
+      this.guessWordArr = this.guessWordStr.toUpperCase().split('')
+      this.displayWordArr = this.guessWordArr.map(letter => '')
     })
     .catch(err => {
       console.log(err)
+      this.errors.push(err)
     })
   },
   components: {
     HangmanDiagram,
+    GuessWord,
     KeyboardLetter
   },
   methods: {
     selectLetter (letter) {
-      this.currentPlayer == 1 
-        ? this.currentPlayer = 2 
-        : this.currentPlayer = 1
-      console.log(letter);
+
+      if (this.usedLetters.includes(letter)) {
+        return
+      }
+
+      this.usedLetters.push(letter)
+      let match = false
+
+      for (let i = 0; i < this.guessWordArr.length; i++) {
+        if (letter === this.guessWordArr[i]) {
+          this.displayWordArr.splice(i, 1, letter)
+          match = true
+        }
+      }
+
+      if (!match && this.currentPlayer == 1) {
+        this.playerOneLives--
+      }
+
+      if (!match && this.currentPlayer == 2) {
+        this.playerTwoLives--
+      }
+
+      if (!match) {
+        this.currentPlayer == 1 ? this.currentPlayer = 2 : this.currentPlayer = 1
+      }
     },
   },
   watch: {
-    listOfWords (newVal, oldVal) {
-      // console.log('Prop changed: ', newVal, ' | was: ', oldVal)
-    },
-    currentWord (newVal, oldVal) {
-      console.log('Prop changed: ', newVal, ' | was: ', oldVal)
+    guessWordStr (newVal, oldVal) {
 
-      fetch(`${this.entryWordDefUrl}/${this.currentWord}`, {
+      fetch(`${this.entryWordDefUrl}/${this.guessWordStr}`, {
         'method': 'GET',
         'headers': {
           'Content-Type': 'application/json',
@@ -129,9 +159,12 @@ export default {
       })
       .then((res) => res.json())
       .then(data => {
+        console.log(data)
+        this.wordDefinition = data.definitions[this.hintIndex].definition
       })
       .catch(err => {
         console.log(err)
+        this.errors.push(err)
       })
     }
   },
