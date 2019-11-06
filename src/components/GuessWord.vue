@@ -1,6 +1,6 @@
 <template>
   <div>
-    <ul class="list-none flex justify-center p-10">
+    <ul class="list-none flex justify-center pt-5 pb-5">
       <li
         v-for="(letter, i) in lettersArr"
         :key="`${letter}_${i}`"
@@ -8,12 +8,12 @@
       >
         <span 
           v-if="displayedLettersArr[i] === letter"
-          class="text-6xl pt-2 pb-1 pl-2 pr-2 font-bold rounded bg-orange"
+          class="w-10 h-10 text-center text-6xl pt-3 pb-2 font-bold rounded bg-orange"
         >{{letter}}</span>
         <span 
           v-else
-          class="text-6xl pt-2 pb-1 pl-2 pr-2 font-bold rounded border-orange"
-        >_</span>
+          class="w-10 h-10 text-6xl pt-2 pb-2 font-bold rounded border-2"
+        ></span>
       </li>
     </ul>
   </div>

@@ -1,6 +1,6 @@
 <template>
   <div 
-    class="flex flex-col justify-center lg:h-screen"
+    class="flex flex-col justify-center sm:h-screen"
   >
     <div 
       class="flex flex-col sm:flex-row justify-center"
@@ -14,7 +14,7 @@
           v-if="currentPlayer == 1"
           class="absolute w-full text-center text-white"
         >guess the letter</p>
-        <HangmanDiagram 
+        <HangmanBox
           :livesLeft="playerOneLives"
         />
         <p class="text-center pb-5 lives-left">lives left: {{ playerOneLives }}</p>
@@ -29,7 +29,7 @@
           v-if="currentPlayer == 2"
           class="absolute w-full text-center text-white"
         >guess the letter</p>
-        <HangmanDiagram
+        <HangmanBox
           :livesLeft="playerTwoLives"
         />
         <p class="text-center pb-5 lives-left">lives left: {{ playerTwoLives }}</p>
@@ -37,12 +37,20 @@
     </div>
 
     <div class="mt-5 flex flex-col">
-      <h4 class="text-center pb-5">Hint</h4>
-      <p class="text-center m-auto w-2/5">{{ wordDefinition }}</p>
-      <GuessWord
-        :displayed-letters-arr="displayWordArr"
-        :letters-arr="guessWordArr"
-      />
+
+      <div v-if="errors">
+        <p v-for="error in errors">{{ error }}</p>
+      </div>
+
+      <div v-else>
+        <h4 class="text-center pb-1">Hint</h4>
+        <p class="text-center text-grey-dark m-auto w-2/5">{{ wordDefinition }}</p>
+        <GuessWord
+          :displayed-letters-arr="displayWordArr"
+          :letters-arr="guessWordArr"
+        />
+      </div>
+
       <div
         v-for="(row, key) in letters"
         :key="key"
@@ -62,7 +70,7 @@
 </template>
 
 <script>
-import HangmanDiagram from '@/components/HangmanDiagram'
+import HangmanBox from '@/components/HangmanBox'
 import KeyboardLetter from '@/components/KeyboardLetter'
 import GuessWord from '@/components/GuessWord'
 
@@ -112,7 +120,7 @@ export default {
     })
   },
   components: {
-    HangmanDiagram,
+    HangmanBox,
     GuessWord,
     KeyboardLetter
   },
@@ -167,15 +175,13 @@ export default {
         this.errors.push(err)
       })
     }
-  },
-  computed: {
-  },
+  }
 }
 </script>
 
 <style>
 .is-active {
-  background-color: #9561e2;
+  background-color: #90cdf4;
 }
 .is-active .player-title,
 .is-active .lives-left,
