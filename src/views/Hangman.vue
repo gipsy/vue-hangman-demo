@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!isLoading"
+  <div 
     class="flex flex-col justify-center h-screen"
   >
     <HangmanDiagram 
@@ -18,21 +18,18 @@
         v-cloak
       />
     </div>
-    <p v-if="isLoading">Loading Words...</p>
-    <p v-if="isError">Can't load words</p>
   </div>
 </template>
 
 <script>
 import HangmanDiagram from '@/components/HangmanDiagram'
 import KeyboardLetter from '@/components/KeyboardLetter'
-import { mapActions, mapGetters } from 'vuex'
+
+import axios from 'axios'
+// import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'hangman-view',
-  async mounted () {
-    await this.loadAllWords()
-  },
   data () {
     return {
       letters: [
@@ -41,12 +38,39 @@ export default {
         ['Z', 'X', 'C', 'V', 'B', 'N', 'M']
       ],
       word: '',
+      words: [],
       usedLetters: [],
       playerOneLives: 0,
       playerTwoLives: 0,
       currentPlayer: 0,
-      gameOver: false
+      gameOver: false,
     }
+  },
+  created() {
+    // const url = 'https://od-api.oxforddictionaries.com/api/v2/domains/en-gb'
+    const url = 'https://private-09961c-listofwords.apiary-mock.com/words'
+    axios.get(url)
+      // headers: {
+      //})
+    .then(response => {
+      console.log('axios response')
+      console.log(response.data)
+      // console.log(this)
+      // JSON responses are automatically parsed.
+      // this.posts = response.data
+      this.words = Object.keys(response.data.results)
+    })
+    .catch(e => {
+      console.log(e)
+      // this.errors.push(e)
+    })
+
+    // axios({ method: 'GET', 'url': url }).then(result => {
+    //   // this.ip = result.data.origin;
+    //   console.log(result.data
+    // }, error => {
+    //   console.error(error);
+    // })
   },
   components: {
     HangmanDiagram,
@@ -56,17 +80,9 @@ export default {
     selectLetter (letter) {
       console.log(letter);
     },
-    ...mapActions({
-      loadAllWords: 'words/loadAll',
-    }),
   },
   computed: {
-    ...mapGetters({
-      isLoading: 'words/isLoading',
-      isError: 'words/isError',
-      allWordss: 'words/all',
-    }),
-  }
+  },
 }
 </script>
 
