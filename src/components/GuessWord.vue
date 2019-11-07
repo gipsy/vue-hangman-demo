@@ -8,11 +8,11 @@
       >
         <span 
           v-if="displayedLettersArr[i] === letter"
-          class="w-10 h-10 text-center text-6xl pt-3 pb-2 font-bold rounded bg-orange"
+          class="w-8 h-8 sm:w-10 sm:h-10 text-center text-sm sm:text-6xl pt-2 sm:pt-3 pb-2 font-bold rounded bg-orange"
         >{{letter}}</span>
         <span 
           v-else
-          class="w-10 h-10 text-6xl pt-2 pb-2 font-bold rounded border-2"
+          class="w-8 h-8 sm:w-10 sm:h-10 text-6xl pt-2 pb-2 font-bold rounded border-2"
         ></span>
       </li>
     </ul>
