@@ -1,10 +1,10 @@
 <template>
   <div>
-    <ul class="list-none flex justify-center pt-5 pb-5">
+    <ul class="list-none flex justify-center pt-5 pb-5 px-0">
       <li
         v-for="(letter, i) in lettersArr"
         :key="`${letter}_${i}`"
-        class="inline-flex text-6xl m-1"
+        class="letter inline-flex text-6xl m-1"
       >
         <span 
           v-if="displayedLettersArr[i] === letter"

@@ -12,7 +12,7 @@ export default {
   props: [
     'letter', 
     'selectedLettersArr',
-    'currentPlayer',
+    'loading',
     'gameOver'
   ],
   data () {
@@ -37,9 +37,9 @@ export default {
 </script>
 
 <style scoped>
-button:disabled {
-  color: white;
-  background-color: #ccc;
-  border-color: #ccc;
-}
+  button:disabled {
+    color: white;
+    background-color: #ccc;
+    border-color: #ccc;
+  }
 </style>
