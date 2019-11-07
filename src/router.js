@@ -15,8 +15,13 @@ export default new Router({
     },
     {
       path: '/hangman',
-      name: 'hangman',
       component: () => import(/* webpackChunkName: "hangman" */ './views/Hangman.vue')
+    },
+    {
+      path: '/hangman/:suggestedWord',
+      name: 'hangman',
+      component: () => import(/* webpackChunkName: "hangman" */ './views/Hangman.vue'),
+      props: true
     }
   ]
 })

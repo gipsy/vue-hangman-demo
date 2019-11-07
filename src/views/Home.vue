@@ -18,8 +18,23 @@
         <router-link 
           to="/hangman" 
           tag="button"
-          class="text-6xl font-normal rounded-full px-4 py-1 leading-normal bg-white border border-purple text-purple hover:bg-purple hover:text-white"
-        >Start Hangman Game</router-link>
+          class="text-6xl text-center font-normal rounded-full px-4 py-1 leading-normal bg-white border border-purple text-purple hover:bg-purple hover:text-white w-full sm:w-auto"
+        >Start Hangman Game with random word</router-link>
+        <p class="text-center p-2 font-bold text-purple">OR</p>
+        <button 
+          class="text-center font-normal rounded-full px-4 py-1 leading-normal bg-white border border-purple text-purple hover:bg-purple hover:text-white w-full sm:w-auto"
+          @click="startGame()"
+        >
+          <span>Input </span>
+            <input 
+              class="text-center font-bold italic outline-none text-purple"
+              v-model="suggestedWord" 
+              placeholder="<suggested word here>"
+              @click.stop
+              @keyup.enter="startGame()"
+            >
+          <span> manually</span>
+        </button>
       </div>
     </div>
   </div>
@@ -27,6 +42,19 @@
 
 <script>
 export default {
-  name: 'home-view'
+  name: 'home-view',
+  data () {
+    return {
+      suggestedWord: ''
+    }
+  },
+  methods: {
+    startGame() {
+      this.$router.push({ 
+        name: 'hangman', 
+        params: { suggestedWord: this.suggestedWord} 
+      })
+    }
+  },
 }
 </script>

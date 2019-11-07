@@ -49,7 +49,7 @@
 
       <div v-if="!loading">
         <h4 class="text-center pb-1">Hint</h4>
-        <p class="text-center text-grey-dark m-auto w-2/3">{{ wordDefinition }}</p>
+        <p v-html="wordDefinition" class="text-center text-grey-dark m-auto w-2/3"></p>
         <GuessWord
           :displayed-letters-arr="displayWordArr"
           :letters-arr="guessWordArr"
@@ -103,6 +103,9 @@ import GuessWord from '@/components/GuessWord'
 
 export default {
   name: 'hangman-view',
+  props: [
+    'suggestedWord'
+  ],
   data () {
     return {
       letters: [
@@ -129,7 +132,9 @@ export default {
     }
   },
   created() {
-    this.getListOfWords()
+    this.suggestedWord 
+      ? this.initializeManualWordGame()
+      : this.getListOfWords()
   },
   components: {
     HangmanBox,
@@ -205,8 +210,13 @@ export default {
     },
 
     resetGame () {
-      console.log('reset game')
       this.getListOfWords()
+    },
+
+    initializeManualWordGame () {
+      this.guessWordStr = this.suggestedWord
+      this.guessWordArr = this.guessWordStr.toUpperCase().split('')
+      this.displayWordArr = this.guessWordArr.map(() => '')
     },
 
     getListOfWords () {
