@@ -170,10 +170,21 @@ export default {
         this.currentPlayer == 1 ? this.currentPlayer = 2 : this.currentPlayer = 1
       }
 
+      if (this.playerLives == 0) {
+        this.winner = 2
+        this.gameOver = true
+        return
+      }
+
+      if (this.computerLives == 0) {
+        this.winner = 1
+        this.gameOver = true
+        return
+      }
+
       if (this.currentPlayer == 2) {
         let unusedLetters = [].concat(...this.letters).filter(letter => !this.usedLetters.includes(letter))
         let randomLetter = unusedLetters[Math.floor(Math.random() * unusedLetters.length)]
-        console.log(this.checkGotWord())
         if (this.checkGotWord()) {
           this.winner = 2
           this.gameOver = true
@@ -186,16 +197,6 @@ export default {
         this.currentPlayer == 1 ? this.winner = 1 : this.winner = 2
         this.gameOver = true
         return
-      }
-
-      if (this.playerLives == 0) {
-        this.winner = 1
-        this.gameOver = true
-      }
-
-      if (this.computerLives == 0) {
-        this.winner = 2
-        this.gameOver = true
       }
     },
 
@@ -282,10 +283,6 @@ export default {
 </script>
 
 <style lang="scss">
-  $itemSize : 50;
-  $itemSpacing : 2;
-  $squareSize : 40;
-  $loaderColor : rgba(61, 92, 126, 0.7);
   $loaderDelay : 100;
   $loaderDuration : 2000;
   $animationTiming: cubic-bezier(.645, .045, .355, 1);
