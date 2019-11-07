@@ -10,10 +10,6 @@
         :class="currentPlayer == 1 ? 'is-active' : ''"
       >
         <h3 class="text-center pt-5 player-title">You</h3>
-        <h1 
-          v-if="winner == 1"
-          class="text-center"
-        >Win!</h1>
         <p 
           v-if="currentPlayer == 1"
           class="absolute w-full text-center text-white"
@@ -29,10 +25,6 @@
         :class="currentPlayer == 2 ? 'is-active' : ''"
       >
         <h3 class="text-center pt-5 player-title">Computer</h3>
-        <h1 
-          v-if="winner == 2"
-          class="text-center"
-        >Win!</h1>
         <p 
           v-if="currentPlayer == 2"
           class="absolute w-full text-center text-white"
@@ -52,16 +44,22 @@
           v-for="(error, i) in errors"
           :key="i"
           class="text-center font-bold text-red"
-        >{{ error[i] }}</p>
+        >{{ error }}</p>
       </div>
 
-      <div v-else>
+      <div v-else-if="!gameOver">
         <h4 class="text-center pb-1">Hint</h4>
         <p class="text-center text-grey-dark m-auto w-2/5">{{ wordDefinition }}</p>
         <GuessWord
           :displayed-letters-arr="displayWordArr"
           :letters-arr="guessWordArr"
         />
+      </div>
+
+      <div v-else>
+        <h2 class="text-center">Game Over!</h2>
+        <p v-if="winner == 1" class="text-center">You win.</p>
+        <p v-if="winner == 2" class="text-center">Computer win.</p>
       </div>
 
       <div
@@ -79,6 +77,7 @@
           v-cloak
         />
       </div>
+      <button class="inline-flex justify-center mx-auto w-1/2 text-xs sm:text-xm font-bold rounded-full my-2 sm:my-5 px-1 py-1 sm:px-2 sm:py-2 border border-purple text-purple hover:bg-purple hover:text-white">New Game</button>
     </div>
   </div>
 </template>
@@ -127,8 +126,8 @@ export default {
       this.displayWordArr = this.guessWordArr.map(() => '')
     })
     .catch(err => {
-      console.log(err)
-      this.errors.push(err)
+      console.log(err.message)
+      this.errors.push(err.message)
     })
   },
   components: {
@@ -168,18 +167,41 @@ export default {
       if (this.currentPlayer == 2) {
         let unusedLetters = [].concat(...this.letters).filter(letter => !this.usedLetters.includes(letter))
         let randomLetter = unusedLetters[Math.floor(Math.random() * unusedLetters.length)]
+        console.log(this.checkGotWord())
+        if (this.checkGotWord()) {
+          this.winner = 2
+          this.gameOver = true
+          return
+        }
         this.computerSelectLetter(randomLetter)
       }
-      // if (this.usedLetters.length == this.letters.length) {
-      //   this.gameOver = true
-      // }
+
+      if (this.checkGotWord()) {
+        this.currentPlayer == 1 ? this.winner = 1 : this.winner = 2
+        this.gameOver = true
+        return
+      }
+
+      if (this.playerLives == 0) {
+        this.gameOver = true
+        this.winner = 1
+      }
+
+      if (this.computerLives == 0) {
+        this.gameOver = true
+        this.winner = 2
+      }
     },
 
     computerSelectLetter (letter) {
-      console.log('computerSelectLetter')
-      console.log(letter)
-      setTimeout(() => { this.selectLetter(letter) },5000)
+      setTimeout(() => { this.selectLetter(letter) },1000)
     },
+
+    checkGotWord () {
+      return this.displayWordArr.join('').toLowerCase() == this.guessWordStr 
+        ? true 
+        : false
+    }
   },
 
   watch: {
@@ -199,8 +221,8 @@ export default {
         this.wordDefinition = data.definitions[this.hintIndex].definition
       })
       .catch(err => {
-        console.log(err)
-        this.errors.push(err)
+        console.log(err.message)
+        this.errors.push(err.message)
       })
     },
 
