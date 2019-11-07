@@ -47,27 +47,25 @@
         >{{ error }}</p>
       </div>
 
-      <div v-else-if="!gameOver">
-        <div v-if="!loading">
-          <h4 class="text-center pb-1">Hint</h4>
-          <p class="text-center text-grey-dark m-auto w-2/3">{{ wordDefinition }}</p>
-          <GuessWord
-            :displayed-letters-arr="displayWordArr"
-            :letters-arr="guessWordArr"
-          />
-        </div>
-        <div v-else class="loader loader--flipHoz loader--3d">
-          <span class="loader-item m-1 w-10 h-10 pt-3 pb-3 text-center rounded bg-orange">L</span>
-          <span class="loader-item m-1 w-10 h-10 pt-3 pb-3 text-center rounded bg-orange">O</span>
-          <span class="loader-item m-1 w-10 h-10 pt-3 pb-3 text-center rounded bg-orange">A</span>
-          <span class="loader-item m-1 w-10 h-10 pt-3 pb-3 text-center rounded bg-orange">D</span>
-          <span class="loader-item m-1 w-10 h-10 pt-3 pb-3 text-center rounded bg-orange">I</span>
-          <span class="loader-item m-1 w-10 h-10 pt-3 pb-3 text-center rounded bg-orange">N</span>
-          <span class="loader-item m-1 w-10 h-10 pt-3 pb-3 text-center rounded bg-orange">G</span>
-        </div>
+      <div v-if="!loading">
+        <h4 class="text-center pb-1">Hint</h4>
+        <p class="text-center text-grey-dark m-auto w-2/3">{{ wordDefinition }}</p>
+        <GuessWord
+          :displayed-letters-arr="displayWordArr"
+          :letters-arr="guessWordArr"
+        />
+      </div>
+      <div v-else class="loader loader--flipHoz loader--3d">
+        <span class="loader-item m-1 w-10 h-10 pt-3 pb-3 text-center rounded bg-orange">L</span>
+        <span class="loader-item m-1 w-10 h-10 pt-3 pb-3 text-center rounded bg-orange">O</span>
+        <span class="loader-item m-1 w-10 h-10 pt-3 pb-3 text-center rounded bg-orange">A</span>
+        <span class="loader-item m-1 w-10 h-10 pt-3 pb-3 text-center rounded bg-orange">D</span>
+        <span class="loader-item m-1 w-10 h-10 pt-3 pb-3 text-center rounded bg-orange">I</span>
+        <span class="loader-item m-1 w-10 h-10 pt-3 pb-3 text-center rounded bg-orange">N</span>
+        <span class="loader-item m-1 w-10 h-10 pt-3 pb-3 text-center rounded bg-orange">G</span>
       </div>
 
-      <div v-else>
+      <div v-if="gameOver">
         <h2 class="text-center">Game Over!</h2>
         <p v-if="winner == 1" class="text-center">You win.</p>
         <p v-if="winner == 2" class="text-center">Computer win.</p>
