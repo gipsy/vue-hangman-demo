@@ -10,13 +10,17 @@
         :class="currentPlayer == 1 ? 'is-active' : ''"
       >
         <h3 class="text-center pt-5 player-title">Player 1</h3>
+        <h1 
+          v-if="winner == 1"
+          class="text-center"
+        >Win!</h1>
         <p 
           v-if="currentPlayer == 1"
           class="absolute w-full text-center text-white"
         >guess the letter</p>
-        <HangmanBox
-          :livesLeft="playerOneLives"
-        />
+
+        <HangmanBox :livesLeft="playerOneLives"/>
+
         <p class="text-center pb-5 lives-left">lives left: {{ playerOneLives }}</p>
       </div>
 
@@ -25,21 +29,28 @@
         :class="currentPlayer == 2 ? 'is-active' : ''"
       >
         <h3 class="text-center pt-5 player-title">Player 2</h3>
+        <h1 
+          v-if="winner == 2"
+          class="text-center"
+        >Win!</h1>
         <p 
           v-if="currentPlayer == 2"
           class="absolute w-full text-center text-white"
         >guess the letter</p>
-        <HangmanBox
-          :livesLeft="playerTwoLives"
-        />
+
+        <HangmanBox :livesLeft="playerTwoLives"/>
+
         <p class="text-center pb-5 lives-left">lives left: {{ playerTwoLives }}</p>
       </div>
     </div>
 
     <div class="mt-5 flex flex-col">
 
-      <div v-if="errors">
-        <p v-for="error in errors">{{ error }}</p>
+      <div v-if="errors.length > 0">
+        <p 
+          v-for="(error, i) in errors"
+          :key="i"
+        >{{ error }}</p>
       </div>
 
       <div v-else>
@@ -74,9 +85,6 @@ import HangmanBox from '@/components/HangmanBox'
 import KeyboardLetter from '@/components/KeyboardLetter'
 import GuessWord from '@/components/GuessWord'
 
-import axios from 'axios'
-// import { mapActions, mapGetters } from 'vuex'
-
 export default {
   name: 'hangman-view',
   data () {
@@ -99,6 +107,7 @@ export default {
       entryWordDefUrl: 'https://owlbot.info/api/v3/dictionary',
       listOfWordsUrl: 'https://private-09961c-listofwords.apiary-mock.com/words',
       errors: [],
+      winner: false,
       hintIndex: 0
     }
   },
@@ -112,7 +121,7 @@ export default {
       this.listOfWords = Object.keys(data.results).filter(word => word.match(/^[^_]+$/))
       this.guessWordStr = this.listOfWords[Math.floor(Math.random() * this.listOfWords.length)]
       this.guessWordArr = this.guessWordStr.toUpperCase().split('')
-      this.displayWordArr = this.guessWordArr.map(letter => '')
+      this.displayWordArr = this.guessWordArr.map(() => '')
     })
     .catch(err => {
       console.log(err)
@@ -152,10 +161,14 @@ export default {
       if (!match) {
         this.currentPlayer == 1 ? this.currentPlayer = 2 : this.currentPlayer = 1
       }
+
+      // if (this.usedLetters.length == this.letters.length) {
+      //   this.gameOver = true
+      // }
     },
   },
   watch: {
-    guessWordStr (newVal, oldVal) {
+    guessWordStr () {
 
       fetch(`${this.entryWordDefUrl}/${this.guessWordStr}`, {
         'method': 'GET',
@@ -174,6 +187,12 @@ export default {
         console.log(err)
         this.errors.push(err)
       })
+    },
+
+    gameOver (newVal) {
+      console.log('gameOver')
+      console.log(newVal)
+      // this.playerOneLives > this.playerTwoLives ? this.winner = 1 : this.winner = 2
     }
   }
 }
@@ -181,7 +200,8 @@ export default {
 
 <style>
 .is-active {
-  background-color: #90cdf4;
+  background-color: #6cb2eb;
+  transition: all 0.3s;
 }
 .is-active .player-title,
 .is-active .lives-left,
