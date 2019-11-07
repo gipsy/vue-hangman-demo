@@ -2,7 +2,7 @@
   <button
     class="text-xs font-normal rounded-full m-1 px-3 sm:px-4 sm:py-1 leading-normal bg-white border border-purple text-purple hover:bg-purple hover:text-white"
     :id="letter"
-    :disabled="disabled"
+    :disabled="disabled || checkIfDisabled()"
     @click="clicked()"
   >{{ letter }}</button>
 </template>
@@ -11,6 +11,7 @@
 export default {
   props: [
     'letter', 
+    'selectedLettersArr',
     'gameOver'
   ],
   data () {
@@ -23,6 +24,9 @@ export default {
       this.disabled = true
       this.$emit('letter-selected')
     },
+    checkIfDisabled () {
+      return this.selectedLettersArr.includes(this.letter)
+    }
   },
   watch: {
     gameOver (newValue) {

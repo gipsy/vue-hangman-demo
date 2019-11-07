@@ -9,7 +9,7 @@
         class="relative m-2 max-w-sm mx-auto border-solid border-1 border-purple rounded-full shadow"
         :class="currentPlayer == 1 ? 'is-active' : ''"
       >
-        <h3 class="text-center pt-5 player-title">Player 1</h3>
+        <h3 class="text-center pt-5 player-title">You</h3>
         <h1 
           v-if="winner == 1"
           class="text-center"
@@ -19,16 +19,16 @@
           class="absolute w-full text-center text-white"
         >guess the letter</p>
 
-        <HangmanBox :livesLeft="playerOneLives"/>
+        <HangmanBox :livesLeft="playerLives"/>
 
-        <p class="text-center pb-5 lives-left">lives left: {{ playerOneLives }}</p>
+        <p class="text-center pb-5 lives-left">lives left: {{ playerLives }}</p>
       </div>
 
       <div 
         class="relative m-2 max-w-sm mx-auto border-solid border-1 border-purple rounded-full shadow"
         :class="currentPlayer == 2 ? 'is-active' : ''"
       >
-        <h3 class="text-center pt-5 player-title">Player 2</h3>
+        <h3 class="text-center pt-5 player-title">Computer</h3>
         <h1 
           v-if="winner == 2"
           class="text-center"
@@ -38,19 +38,21 @@
           class="absolute w-full text-center text-white"
         >guess the letter</p>
 
-        <HangmanBox :livesLeft="playerTwoLives"/>
+        <HangmanBox :livesLeft="computerLives"/>
 
-        <p class="text-center pb-5 lives-left">lives left: {{ playerTwoLives }}</p>
+        <p class="text-center pb-5 lives-left">lives left: {{ computerLives }}</p>
       </div>
     </div>
 
     <div class="mt-5 flex flex-col">
 
       <div v-if="errors.length > 0">
+        <h5 class="text-center text-red">Something wrong happens!</h5>
         <p 
           v-for="(error, i) in errors"
           :key="i"
-        >{{ error }}</p>
+          class="text-center font-bold text-red"
+        >{{ error[i] }}</p>
       </div>
 
       <div v-else>
@@ -70,6 +72,7 @@
         <KeyboardLetter
           v-for="letter in row"
           :letter="letter"
+          :selectedLettersArr="usedLetters"
           :game-over="gameOver"
           :key="letter"
           @letter-selected="selectLetter(letter)"
@@ -100,8 +103,8 @@ export default {
       listOfWords: [],
       wordDefinition: '',
       usedLetters: [],
-      playerOneLives: 11,
-      playerTwoLives: 11,
+      playerLives: 11,
+      computerLives: 11,
       currentPlayer: 1,
       gameOver: false,
       entryWordDefUrl: 'https://owlbot.info/api/v3/dictionary',
@@ -151,22 +154,34 @@ export default {
       }
 
       if (!match && this.currentPlayer == 1) {
-        this.playerOneLives--
+        this.playerLives--
       }
 
       if (!match && this.currentPlayer == 2) {
-        this.playerTwoLives--
+        this.computerLives--
       }
 
       if (!match) {
         this.currentPlayer == 1 ? this.currentPlayer = 2 : this.currentPlayer = 1
       }
 
+      if (this.currentPlayer == 2) {
+        let unusedLetters = [].concat(...this.letters).filter(letter => !this.usedLetters.includes(letter))
+        let randomLetter = unusedLetters[Math.floor(Math.random() * unusedLetters.length)]
+        this.computerSelectLetter(randomLetter)
+      }
       // if (this.usedLetters.length == this.letters.length) {
       //   this.gameOver = true
       // }
     },
+
+    computerSelectLetter (letter) {
+      console.log('computerSelectLetter')
+      console.log(letter)
+      setTimeout(() => { this.selectLetter(letter) },5000)
+    },
   },
+
   watch: {
     guessWordStr () {
 
@@ -192,7 +207,7 @@ export default {
     gameOver (newVal) {
       console.log('gameOver')
       console.log(newVal)
-      // this.playerOneLives > this.playerTwoLives ? this.winner = 1 : this.winner = 2
+      // this.playerLives > this.computerLives ? this.winner = 1 : this.winner = 2
     }
   }
 }
